@@ -2,7 +2,7 @@ trigger:
  - master
 
 pool:
-  name: 'Ubuntu 16.04'
+  name: 'ubuntu-latest'
 steps:
 - task: GoTool@0
   displayName: 'Use Go 1.10'
