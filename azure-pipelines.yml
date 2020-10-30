@@ -2,7 +2,7 @@ trigger:
  - master
 
 pool:
-  name: Azure Pipelines
+  name: 'Ubuntu 16.04'
 steps:
 - task: GoTool@0
   displayName: 'Use Go 1.10'
