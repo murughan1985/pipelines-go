@@ -2,29 +2,36 @@ trigger:
  - master
 
 pool:
-   vmImage: 'ubuntu-latest'
-
-steps: 
+  name: Azure Pipelines
+steps:
 - task: GoTool@0
-  inputs:
-    version: '1.13.5'
+  displayName: 'Use Go 1.10'
+
 - task: Go@0
+  displayName: 'go get'
   inputs:
-    command: 'get'
     arguments: '-d'
-    workingDirectory: '$(System.DefaultWorkingDirectory)'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/Application'
+
 - task: Go@0
+  displayName: 'go build'
   inputs:
-    command: 'build'
-    workingDirectory: '$(System.DefaultWorkingDirectory)'
-- task: Go@0
+    command: build
+    arguments: '-o "$(System.TeamProject).exe"'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/Application'
+
+- task: ArchiveFiles@2
+  displayName: 'Archive Files'
   inputs:
-    command: 'test'
-    arguments: '-v'
-    workingDirectory: '$(modulePath)'
+    rootFolderOrFile: '$(Build.Repository.LocalPath)/Application'
+    includeRootFolder: False
+
 - task: CopyFiles@2
+  displayName: 'Copy ARM templates'
   inputs:
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    SourceFolder: ArmTemplates
+    TargetFolder: '$(build.artifactstagingdirectory)'
+
 - task: PublishBuildArtifacts@1
-  inputs:
-     artifactName: drop
+  displayName: 'Publish Artifact'
+
